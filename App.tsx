@@ -1,0 +1,195 @@
+
+import React, { useState, useEffect } from 'react';
+import { Student, Teacher, User } from './types';
+import { students, teachers } from './data/mockData';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import Dashboard from './components/views/Dashboard';
+import Students from './components/views/Students';
+import Teachers from './components/views/Teachers';
+import Courses from './components/views/Courses';
+import Grades from './components/views/Grades';
+import Attendance from './components/views/Attendance';
+import Timetable from './components/views/Timetable';
+import Communication from './components/views/Communication';
+import StudentProfile from './components/views/StudentProfile';
+import UserManagement from './components/views/UserManagement';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { NotificationProvider } from './contexts/NotificationContext';
+
+// Mock user login
+const LOGGED_IN_USER_ID = 'admin'; 
+
+const AppContent = () => {
+  const { colors } = useTheme();
+  const { t } = useLanguage();
+  
+  // --- Centralized Data State ---
+  // We lift the users state here so Dashboard stats update when UserManagement changes data
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+
+  // Initialize Data
+  useEffect(() => {
+      const initialUsers: User[] = [...students, ...teachers];
+      // Ensure Admin exists
+      if (!initialUsers.find(u => u.role === 'Administrator')) {
+          initialUsers.unshift({
+              id: 'admin',
+              name: 'System Administrator',
+              email: 'admin@school.edu',
+              role: 'Administrator',
+              status: 'Active',
+              joinDate: '2020-01-01',
+              avatarUrl: 'https://ui-avatars.com/api/?name=System+Admin&background=0D8ABC&color=fff'
+          });
+      }
+      setAllUsers(initialUsers);
+  }, []);
+
+  const currentUser = allUsers.find(u => u.id === LOGGED_IN_USER_ID);
+
+  const [currentView, setCurrentView] = useState('Dashboard');
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Special state to pass params to views (e.g., Open Modal immediately)
+  const [viewParams, setViewParams] = useState<{ [key: string]: any }>({});
+
+  const handleSetView = (view: string, params: { [key: string]: any } = {}) => {
+    setCurrentView(view);
+    setViewParams(params);
+    setSidebarOpen(false); // Close sidebar on navigation
+  };
+
+  const handleViewStudentProfile = (studentId: string) => {
+    setSelectedStudentId(studentId);
+    handleSetView('StudentProfile');
+  };
+
+  const renderView = () => {
+    if (!currentUser) {
+      return <div>{t('loadingUser')}</div>;
+    }
+    switch (currentView) {
+      case 'Dashboard':
+        return <Dashboard currentUser={currentUser} allUsers={allUsers} setView={handleSetView} />;
+      case 'Students':
+        return <Students onSelectStudent={handleViewStudentProfile} />;
+      case 'Teachers':
+        return <Teachers />;
+      case 'UserManagement':
+        return (
+            <UserManagement 
+                users={allUsers} 
+                setUsers={setAllUsers} 
+                autoOpenAdd={viewParams?.openAddModal || false}
+            />
+        );
+      case 'Courses':
+        return <Courses />;
+      case 'Grades':
+        return <Grades currentUser={currentUser} />;
+      case 'Attendance':
+        return <Attendance currentUser={currentUser} />;
+      case 'Timetable':
+        return <Timetable currentUser={currentUser} />;
+      case 'Communication':
+        return <Communication currentUser={currentUser} />;
+      case 'StudentProfile': {
+        const student = students.find(s => s.id === selectedStudentId);
+        if (!student) return <div>{t('studentNotFound')}</div>;
+        return <StudentProfile student={student} />;
+      }
+      default:
+        return <Dashboard currentUser={currentUser} allUsers={allUsers} setView={handleSetView} />;
+    }
+  };
+  
+  const getHeaderTitle = () => {
+    if (currentView === 'StudentProfile') {
+      return t('studentProfile');
+    }
+    if (currentView === 'UserManagement') {
+        return t('userManagement');
+    }
+    return t(currentView.toLowerCase());
+  }
+
+  if (allUsers.length > 0 && !currentUser) {
+    return (
+        <div style={{...styles.appContainer, backgroundColor: colors.background}}>
+            <p style={{color: colors.text, padding: '2rem'}}>{t('userNotFound')}</p>
+        </div>
+    );
+  }
+
+  if (allUsers.length === 0) return null; // Initial loading
+
+  return (
+    <div style={{...styles.appContainer, backgroundColor: colors.background}}>
+      {isSidebarOpen && <div style={styles.overlay} onClick={() => setSidebarOpen(false)} />}
+      <Sidebar
+        currentView={currentView}
+        setView={handleSetView}
+        userRole={currentUser!.role}
+        isSidebarOpen={isSidebarOpen}
+      />
+      <div style={styles.mainContent}>
+        <Header 
+            currentUser={currentUser!} 
+            currentViewTitle={getHeaderTitle()} 
+            onMenuClick={() => setSidebarOpen(true)}
+        />
+        <main style={styles.viewContainer} className="view-container">
+            {renderView()}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+
+const App = () => {
+  return (
+    <LanguageProvider>
+      <ThemeProvider>
+        <NotificationProvider>
+            <AppContent />
+        </NotificationProvider>
+      </ThemeProvider>
+    </LanguageProvider>
+  )
+}
+
+const styles: { [key: string]: React.CSSProperties } = {
+    appContainer: {
+        display: 'flex',
+        height: '100vh',
+        position: 'relative',
+        overflowX: 'hidden',
+        transition: 'background-color 0.3s ease',
+    },
+    mainContent: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: 0, // Prevents content from overflowing on small screens
+    },
+    viewContainer: {
+        padding: '2rem',
+        overflowY: 'auto',
+        flex: 1,
+    },
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 999,
+    },
+};
+
+export default App;

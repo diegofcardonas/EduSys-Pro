@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduSys Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+      }
+
+      /* Responsive Styles */
+      .menu-button {
+        display: none; /* Hidden by default on desktop */
+      }
+
+      @media (max-width: 1024px) {
+        .sidebar {
+          position: fixed;
+          height: 100%;
+          transform: translateX(-100%);
+          transition: transform 0.3s ease-in-out;
+          z-index: 1000;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+          box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .menu-button {
+          display: flex !important; /* Show on mobile/tablet */
+        }
+      }
+
+      @media (max-width: 768px) {
+        .view-container {
+          padding: 1rem !important;
+        }
+        .header {
+          padding: 1rem !important;
+        }
+        .header .viewTitle {
+          font-size: 1.25rem !important;
+        }
+        .header .userInfo {
+          display: none !important;
+        }
+
+        /* Student Profile */
+        .profile-header {
+          flex-direction: column !important;
+          align-items: center !important;
+          text-align: center;
+        }
+        .profile-grid {
+          grid-template-columns: 1fr !important;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
