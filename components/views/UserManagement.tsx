@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { User, Role, UserStatus } from '../../types';
 import { ShieldIcon, UsersIcon, CheckCircleIcon, BanIcon, EditIcon, PlusIcon, SearchIcon, TrashIcon, SaveIcon, XIcon, DownloadIcon, ChevronLeftIcon, ChevronRightIcon, SortIcon } from '../Icons';
@@ -26,11 +25,13 @@ interface UserManagementProps {
     users: User[];
     setUsers: React.Dispatch<React.SetStateAction<User[]>>;
     autoOpenAdd?: boolean;
+    autoEditUserId?: string;
+    actionTimestamp?: number;
 }
 
 const ITEMS_PER_PAGE = 5;
 
-const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOpenAdd }) => {
+const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOpenAdd, autoEditUserId, actionTimestamp }) => {
     const { t } = useLanguage();
     const { colors, theme } = useTheme();
     const { addNotification } = useNotification();
@@ -67,7 +68,17 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
         if (autoOpenAdd) {
             handleAddNew();
         }
-    }, [autoOpenAdd]);
+    }, [autoOpenAdd, actionTimestamp]);
+
+    // Handle Auto Edit (e.g., from Header Profile Click)
+    useEffect(() => {
+        if (autoEditUserId) {
+            const userToEdit = users.find(u => u.id === autoEditUserId);
+            if (userToEdit) {
+                handleEdit(userToEdit);
+            }
+        }
+    }, [autoEditUserId, users, actionTimestamp]);
 
     // Helpers
     const getRoleColor = (role: Role) => {

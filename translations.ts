@@ -24,8 +24,15 @@ export const translations = {
     communication: 'Communication',
     students: 'Students',
     teachers: 'Teachers',
-    users: 'Users & Roles',
-
+    users: 'Users',
+    
+    // Sidebar Groups & Footer
+    menu_main: 'Main',
+    menu_academic: 'Academic',
+    menu_admin: 'Administration',
+    settings: 'Settings',
+    help: 'Help',
+    
     // Header
     studentProfile: 'Student Profile',
     userManagement: 'User Management',
@@ -119,6 +126,9 @@ export const translations = {
     excellent: 'Excellent',
     good: 'Good',
     needsImprovement: 'Needs Improvement',
+    bio: 'Personal Goals & Bio',
+    bioPlaceholder: 'Tell us about yourself, your academic goals, or interests...',
+    changePhoto: 'Change Photo',
     
     // Admin Power Features
     editProfile: 'Edit Profile',
@@ -202,7 +212,14 @@ export const translations = {
     communication: 'Comunicación',
     students: 'Estudiantes',
     teachers: 'Profesores',
-    users: 'Usuarios y Roles',
+    users: 'Usuarios',
+    
+    // Sidebar Groups & Footer
+    menu_main: 'Principal',
+    menu_academic: 'Académico',
+    menu_admin: 'Administración',
+    settings: 'Configuración',
+    help: 'Ayuda',
 
     // Header
     studentProfile: 'Perfil del Estudiante',
@@ -297,6 +314,9 @@ export const translations = {
     excellent: 'Excelente',
     good: 'Bueno',
     needsImprovement: 'Necesita Mejorar',
+    bio: 'Biografía y Objetivos',
+    bioPlaceholder: 'Cuéntanos sobre ti, tus metas académicas o intereses...',
+    changePhoto: 'Cambiar Foto',
 
     // Admin Power Features
     editProfile: 'Editar Perfil',

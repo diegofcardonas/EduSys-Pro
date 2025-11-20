@@ -1,9 +1,11 @@
 
+
 import React, { useState } from 'react';
 import { Student } from '../../types';
 import { courses, grades, attendance, teachers, timetable } from '../../data/mockData';
-import { CoursesIcon, StarIcon, AttendanceIcon, TrendUpIcon, ReportIcon, MailIcon, TimetableIcon, EditIcon, SaveIcon, XIcon, DollarIcon, AlertIcon } from '../Icons';
+import { CoursesIcon, StarIcon, AttendanceIcon, TrendUpIcon, ReportIcon, MailIcon, TimetableIcon, EditIcon, SaveIcon, XIcon, DollarIcon, AlertIcon, CameraIcon } from '../Icons';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useNotification } from '../../contexts/NotificationContext';
 
 interface StudentProfileProps {
   student: Student;
@@ -13,35 +15,58 @@ type Tab = 'overview' | 'academic' | 'attendance' | 'schedule';
 
 const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
   const { t } = useLanguage();
+  const { addNotification } = useNotification();
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [isEditing, setIsEditing] = useState(false);
   
-  // Mock Editable State
+  // Enhanced Editable State
   const [formData, setFormData] = useState({
+      name: student.name,
       email: student.email,
       parentContact: student.parentContact,
       gradeLevel: student.gradeLevel,
+      phoneNumber: student.phoneNumber || '',
+      address: student.address || '',
+      avatarUrl: student.avatarUrl,
+      bio: 'Aspiring student with a passion for science and technology. Member of the debate club and science fair team.' // Mock Bio
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+          const url = URL.createObjectURL(e.target.files[0]);
+          setFormData(prev => ({ ...prev, avatarUrl: url }));
+      }
+  };
+
   const handleSave = () => {
-      // In a real app, this would allow API call
       setIsEditing(false);
-      // Mock update
+      // Update local object (Mock persistence)
+      student.name = formData.name;
       student.email = formData.email;
       student.parentContact = formData.parentContact;
       student.gradeLevel = Number(formData.gradeLevel);
+      student.phoneNumber = formData.phoneNumber;
+      student.address = formData.address;
+      student.avatarUrl = formData.avatarUrl;
+      
+      addNotification(t('userUpdatedSuccess'), 'success');
   };
 
   const handleCancel = () => {
       setFormData({
+          name: student.name,
           email: student.email,
           parentContact: student.parentContact,
           gradeLevel: student.gradeLevel,
+          phoneNumber: student.phoneNumber || '',
+          address: student.address || '',
+          avatarUrl: student.avatarUrl,
+          bio: formData.bio // Keep bio as is for now since it's not in student type
       });
       setIsEditing(false);
   };
@@ -103,6 +128,26 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
                       <p style={styles.statValue}>{studentCourses.length}</p>
                   </div>
               </div>
+          </div>
+
+          {/* Bio / About Section - Editable */}
+          <div style={styles.sectionCard}>
+              <div style={styles.sectionHeader}>
+                  <h3 style={styles.sectionTitle}>{t('bio')}</h3>
+                  {isEditing && <span style={styles.editableBadge}>{t('editUser')}</span>}
+              </div>
+              {isEditing ? (
+                  <textarea 
+                    style={styles.bioInput}
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    placeholder={t('bioPlaceholder')}
+                    rows={4}
+                  />
+              ) : (
+                  <p style={styles.bioText}>{formData.bio}</p>
+              )}
           </div>
 
           <div style={styles.twoColumnGrid}>
@@ -262,11 +307,11 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
 
   return (
     <div style={styles.layoutContainer}>
-      {/* Left Column: Profile Card */}
+      {/* Left Column: Profile Card (Sidebar) */}
       <div style={styles.profileSidebar}>
           <div style={styles.profileCard}>
             {/* Risk Alert */}
-            {isAtRisk && (
+            {isAtRisk && !isEditing && (
                 <div style={styles.riskAlert}>
                     <AlertIcon /> {t('atRisk')}
                 </div>
@@ -274,13 +319,33 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
 
             <div style={styles.avatarContainer}>
                 <img
-                src={student.avatarUrl || `https://i.pravatar.cc/150?u=${student.id}`}
-                alt={`${student.name}'s avatar`}
-                style={styles.avatar}
+                    src={formData.avatarUrl || `https://i.pravatar.cc/150?u=${student.id}`}
+                    alt={`${formData.name}'s avatar`}
+                    style={styles.avatar}
                 />
-                <span style={styles.activeStatus}></span>
+                {!isEditing && <span style={styles.activeStatus}></span>}
+                
+                {/* Editable Avatar Overlay */}
+                {isEditing && (
+                    <label style={styles.avatarOverlay}>
+                        <CameraIcon />
+                        <input type="file" style={{display: 'none'}} accept="image/*" onChange={handleImageUpload} />
+                    </label>
+                )}
             </div>
-            <h2 style={styles.studentName}>{student.name}</h2>
+
+            {/* Name & ID */}
+            {isEditing ? (
+                <input 
+                    style={{...styles.editInput, ...styles.nameInput}}
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder={t('name')}
+                />
+            ) : (
+                <h2 style={styles.studentName}>{formData.name}</h2>
+            )}
             <p style={styles.studentId}>{student.studentId}</p>
             
             <div style={styles.infoGroup}>
@@ -297,6 +362,22 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
                         <span style={styles.infoValue}>{formData.email}</span>
                     )}
                 </div>
+                
+                <div style={styles.infoRow}>
+                    <span style={styles.infoLabel}>{t('phone')}</span>
+                     {isEditing ? (
+                        <input 
+                            style={styles.editInput}
+                            name="phoneNumber" 
+                            value={formData.phoneNumber} 
+                            onChange={handleInputChange}
+                            placeholder="+1 (555) 000-0000" 
+                        />
+                    ) : (
+                        <span style={styles.infoValue}>{formData.phoneNumber || '-'}</span>
+                    )}
+                </div>
+
                 <div style={styles.infoRow}>
                     <span style={styles.infoLabel}>{t('gradeLevel')}</span>
                      {isEditing ? (
@@ -322,6 +403,20 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
                         />
                     ) : (
                         <span style={styles.infoValue}>{formData.parentContact}</span>
+                    )}
+                </div>
+                 <div style={styles.infoRow}>
+                    <span style={styles.infoLabel}>{t('address')}</span>
+                     {isEditing ? (
+                        <input 
+                            style={styles.editInput}
+                            name="address" 
+                            value={formData.address} 
+                            onChange={handleInputChange}
+                            placeholder="123 Main St..." 
+                        />
+                    ) : (
+                        <span style={styles.infoValue}>{formData.address || '-'}</span>
                     )}
                 </div>
             </div>
@@ -462,11 +557,32 @@ const styles: { [key: string]: React.CSSProperties | ((arg: any) => React.CSSPro
         borderRadius: '50%',
         border: '2px solid #FFFFFF',
     },
+    avatarOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        cursor: 'pointer',
+        transition: 'background 0.2s',
+    },
     studentName: {
         margin: '0 0 0.5rem 0',
         fontSize: '1.5rem',
         fontWeight: 700,
         color: '#1E293B',
+    },
+    nameInput: {
+        textAlign: 'center',
+        fontWeight: 700,
+        fontSize: '1.25rem',
+        marginBottom: '0.5rem',
     },
     studentId: {
         margin: 0,
@@ -506,10 +622,36 @@ const styles: { [key: string]: React.CSSProperties | ((arg: any) => React.CSSPro
     editInput: {
         padding: '0.5rem',
         borderRadius: '6px',
-        border: '1px solid #CBD5E1',
+        border: '1px solid #94A3B8',
         fontSize: '0.9rem',
         width: '100%',
         boxSizing: 'border-box',
+        backgroundColor: '#F8FAFC',
+    },
+    bioInput: {
+        padding: '0.75rem',
+        borderRadius: '8px',
+        border: '1px solid #CBD5E1',
+        fontSize: '0.95rem',
+        width: '100%',
+        boxSizing: 'border-box',
+        fontFamily: 'inherit',
+        resize: 'vertical',
+        backgroundColor: '#F8FAFC',
+    },
+    bioText: {
+        margin: 0,
+        fontSize: '0.95rem',
+        color: '#334155',
+        lineHeight: 1.6,
+    },
+    editableBadge: {
+        fontSize: '0.7rem',
+        backgroundColor: '#DBEAFE',
+        color: '#1E40AF',
+        padding: '2px 6px',
+        borderRadius: '4px',
+        fontWeight: 600,
     },
     actionButtons: {
         display: 'flex',

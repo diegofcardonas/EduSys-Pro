@@ -78,7 +78,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, allUsers, setView })
     const handleQuickAction = (actionKey: string) => {
         switch (actionKey) {
             case 'addUser':
-                setView('UserManagement', { openAddModal: true });
+                // Use timestamp to ensure effect runs again even if view didn't change
+                setView('UserManagement', { openAddModal: true, timestamp: Date.now() });
                 break;
             case 'financialStatus':
                 addNotification(t('financialReportGenerated'), 'success');

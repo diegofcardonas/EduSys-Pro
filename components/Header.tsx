@@ -9,9 +9,10 @@ interface HeaderProps {
   currentUser: User;
   currentViewTitle: string;
   onMenuClick: () => void;
+  onProfileClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentUser, currentViewTitle, onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({ currentUser, currentViewTitle, onMenuClick, onProfileClick }) => {
   const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme, colors } = useTheme();
 
@@ -57,15 +58,23 @@ const Header: React.FC<HeaderProps> = ({ currentUser, currentViewTitle, onMenuCl
             <option value="es">🇨🇴 ES</option>
         </select>
         
-        <div style={styles.userInfo} className="userInfo">
-          <span style={{...styles.userName, color: colors.text}}>{currentUser.name}</span>
-          <span style={{...styles.userRole, color: colors.textSecondary}}>{t(getRoleTranslationKey(currentUser.role))}</span>
+        <div 
+            style={styles.userInfoContainer} 
+            className="userInfo"
+            onClick={onProfileClick}
+            title={t('editProfile')}
+        >
+            <div style={styles.userInfoText}>
+                <span style={{...styles.userName, color: colors.text}}>{currentUser.name}</span>
+                <span style={{...styles.userRole, color: colors.textSecondary}}>{t(getRoleTranslationKey(currentUser.role))}</span>
+            </div>
+            <img 
+                src={currentUser.avatarUrl || `https://i.pravatar.cc/150?u=${currentUser.id}`} 
+                alt="User Avatar" 
+                style={styles.avatar}
+            />
         </div>
-        <img 
-            src={currentUser.avatarUrl || `https://i.pravatar.cc/150?u=${currentUser.id}`} 
-            alt="User Avatar" 
-            style={styles.avatar}
-        />
+
         <button style={{...styles.logoutButton, color: colors.textSecondary}} aria-label={t('logout')}>
             <LogoutIcon />
         </button>
@@ -128,7 +137,16 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '50%',
     transition: 'background-color 0.2s',
   },
-  userInfo: {
+  userInfoContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem',
+      cursor: 'pointer',
+      padding: '0.25rem 0.5rem',
+      borderRadius: '8px',
+      transition: 'background-color 0.2s ease',
+  },
+  userInfoText: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-end',

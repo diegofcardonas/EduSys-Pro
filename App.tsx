@@ -67,6 +67,21 @@ const AppContent = () => {
     handleSetView('StudentProfile');
   };
 
+  const handleProfileClick = () => {
+      if (!currentUser) return;
+
+      if (currentUser.role === 'Student') {
+          // Students view their detailed academic profile
+          handleViewStudentProfile(currentUser.id);
+      } else {
+          // Admins and Professors view the User Management modal to edit their details
+          // Note: Professors normally don't see the 'UserManagement' link in sidebar, 
+          // but we route them there specifically to edit themselves.
+          // timestamp forces the effect to run again even if we are already on this view/user
+          handleSetView('UserManagement', { editUserId: currentUser.id, timestamp: Date.now() });
+      }
+  };
+
   const renderView = () => {
     if (!currentUser) {
       return <div>{t('loadingUser')}</div>;
@@ -84,6 +99,8 @@ const AppContent = () => {
                 users={allUsers} 
                 setUsers={setAllUsers} 
                 autoOpenAdd={viewParams?.openAddModal || false}
+                autoEditUserId={viewParams?.editUserId}
+                actionTimestamp={viewParams?.timestamp}
             />
         );
       case 'Courses':
@@ -97,7 +114,7 @@ const AppContent = () => {
       case 'Communication':
         return <Communication currentUser={currentUser} />;
       case 'StudentProfile': {
-        const student = students.find(s => s.id === selectedStudentId);
+        const student = students.find(s => s.id === selectedStudentId) || (currentUser.role === 'Student' ? currentUser as Student : undefined);
         if (!student) return <div>{t('studentNotFound')}</div>;
         return <StudentProfile student={student} />;
       }
@@ -140,6 +157,7 @@ const AppContent = () => {
             currentUser={currentUser!} 
             currentViewTitle={getHeaderTitle()} 
             onMenuClick={() => setSidebarOpen(true)}
+            onProfileClick={handleProfileClick}
         />
         <main style={styles.viewContainer} className="view-container">
             {renderView()}
