@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, Role, UserStatus } from '../../types';
-import { ShieldIcon, UsersIcon, CheckCircleIcon, BanIcon, EditIcon, PlusIcon, SearchIcon, TrashIcon, SaveIcon, XIcon, DownloadIcon, ChevronLeftIcon, ChevronRightIcon, SortIcon } from '../Icons';
+import { ShieldIcon, UsersIcon, CheckCircleIcon, BanIcon, EditIcon, PlusIcon, SearchIcon, TrashIcon, SaveIcon, XIcon, DownloadIcon, ChevronLeftIcon, ChevronRightIcon, SortIcon, CameraIcon } from '../Icons';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useNotification } from '../../contexts/NotificationContext';
@@ -19,6 +19,7 @@ interface ExtendedUserFormData {
     office?: string; // Teacher specific
     gradeLevel?: number; // Student specific
     parentContact?: string; // Student specific
+    avatarUrl?: string;
 }
 
 interface UserManagementProps {
@@ -59,7 +60,8 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
         department: '',
         office: '',
         gradeLevel: 10,
-        parentContact: ''
+        parentContact: '',
+        avatarUrl: ''
     };
     const [formData, setFormData] = useState<ExtendedUserFormData>(initialFormState);
 
@@ -188,7 +190,8 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
             department: user.department || (u.department) || '',
             office: u.office || '',
             gradeLevel: u.gradeLevel || 10,
-            parentContact: u.parentContact || ''
+            parentContact: u.parentContact || '',
+            avatarUrl: user.avatarUrl || ''
         });
         setErrors({});
         setIsModalOpen(true);
@@ -203,6 +206,13 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
             setUsers(prev => prev.filter(u => u.id !== deleteConfirmation));
             addNotification(t('userDeletedSuccess'), 'success');
             setDeleteConfirmation(null);
+        }
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const url = URL.createObjectURL(e.target.files[0]);
+            setFormData(prev => ({ ...prev, avatarUrl: url }));
         }
     };
 
@@ -231,7 +241,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
                 id: Date.now().toString(),
                 ...cleanData,
                 joinDate: new Date().toISOString().split('T')[0],
-                avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
+                avatarUrl: formData.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
                 // Add specific IDs based on role mock logic
                 ...(formData.role === 'Student' ? { studentId: `S${Date.now()}` } : {}),
                 ...(formData.role === 'Professor' ? { teacherId: `T${Date.now()}` } : {})
@@ -265,7 +275,24 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
                                 <XIcon />
                             </button>
                         </div>
+                        
                         <form onSubmit={handleSave} style={styles.form}>
+                            
+                            {/* Avatar Upload Section */}
+                            <div style={styles.avatarUploadContainer}>
+                                <div style={styles.avatarWrapper}>
+                                    <img 
+                                        src={formData.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name || 'User')}&background=random`} 
+                                        alt="Profile Preview" 
+                                        style={{...styles.avatarPreview, borderColor: colors.border}}
+                                    />
+                                    <label style={{...styles.cameraBtn, backgroundColor: colors.card, borderColor: colors.border}} title={t('changePhoto')}>
+                                        <CameraIcon />
+                                        <input type="file" style={{display: 'none'}} accept="image/*" onChange={handleImageUpload} />
+                                    </label>
+                                </div>
+                            </div>
+
                             {/* Row 1: Name & Email */}
                             <div style={styles.formRow}>
                                 <div style={styles.formGroup}>
@@ -744,6 +771,41 @@ const styles: { [key: string]: React.CSSProperties } = {
         marginBottom: '2rem',
     },
     
+    // Avatar Upload Styles
+    avatarUploadContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: '0.5rem',
+    },
+    avatarWrapper: {
+        position: 'relative',
+        width: '100px',
+        height: '100px',
+    },
+    avatarPreview: {
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        objectFit: 'cover',
+        border: '3px solid',
+    },
+    cameraBtn: {
+        position: 'absolute',
+        bottom: '-5px',
+        right: '-5px',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid',
+        borderRadius: '50%',
+        width: '32px',
+        height: '32px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        color: '#64748B',
+    },
+
     // Top Section Stats
     topSection: {
         display: 'flex',
