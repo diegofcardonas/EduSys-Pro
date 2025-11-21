@@ -48,11 +48,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, userRole, isSid
           label: 'menu_academic',
           items: [
             { name: 'courses', viewName: 'Courses', icon: CoursesIcon, roles: ['Administrator', 'Professor', 'Student'] },
-            { name: 'timetable', viewName: 'Timetable', icon: TimetableIcon, roles: ['Professor', 'Student'] },
-            { name: 'grades', viewName: 'Grades', icon: GradesIcon, roles: ['Professor', 'Student'] },
-            { name: 'attendance', viewName: 'Attendance', icon: AttendanceIcon, roles: ['Professor'] },
-            { name: 'students', viewName: 'Students', icon: StudentsIcon, roles: ['Professor'] },
-            { name: 'teachers', viewName: 'Teachers', icon: TeachersIcon, roles: ['Student'] },
+            { name: 'timetable', viewName: 'Timetable', icon: TimetableIcon, roles: ['Administrator', 'Professor', 'Student'] },
+            { name: 'grades', viewName: 'Grades', icon: GradesIcon, roles: ['Administrator', 'Professor', 'Student'] },
+            { name: 'attendance', viewName: 'Attendance', icon: AttendanceIcon, roles: ['Administrator', 'Professor'] },
+            { name: 'students', viewName: 'Students', icon: StudentsIcon, roles: ['Administrator', 'Professor'] },
+            { name: 'teachers', viewName: 'Teachers', icon: TeachersIcon, roles: ['Administrator', 'Professor', 'Student'] },
           ]
       },
       {
@@ -75,8 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, userRole, isSid
 
   const sidebarBg = theme === 'light' ? colors.primary : '#1E293B'; 
   
-  // Dynamic widths based on state
-  const width = isSidebarOpen ? '280px' : isCollapsed ? '80px' : '280px';
+  // The width should only be controlled by the collapsed state for desktop view.
+  // The open/closed state on mobile is handled entirely by a CSS class (`.open`).
+  const width = isCollapsed ? '80px' : '280px';
   
   const handleFooterAction = (action: string) => {
       addNotification(`${t('featureNotAvailable')}: ${action}`, 'info');
@@ -93,8 +94,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, userRole, isSid
             <div style={styles.logoIcon}>ES</div>
             {!isCollapsed && <h1 style={styles.logoText}>EduSys Pro</h1>}
         </div>
-        {/* Collapse Toggle (Desktop Only usually, but useful here) */}
-        <button style={styles.collapseBtn} onClick={toggleCollapse}>
+        {/* Collapse Toggle (Desktop Only) - Class added to hide on mobile */}
+        <button style={styles.collapseBtn} onClick={toggleCollapse} className="sidebar-collapse-btn">
             {isCollapsed ? <ChevronRightDoubleIcon /> : <ChevronLeftDoubleIcon />}
         </button>
       </div>
@@ -170,7 +171,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Transition width for desktop collapse
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     boxShadow: '4px 0 10px rgba(0,0,0,0.1)',
@@ -216,7 +217,6 @@ const styles: { [key: string]: React.CSSProperties } = {
       color: '#FFFFFF',
       cursor: 'pointer',
       padding: '0.5rem',
-      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       transition: 'background 0.2s',

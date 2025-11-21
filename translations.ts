@@ -79,6 +79,13 @@ export const translations = {
 
     // Courses View
     studentsLabel: 'Students',
+    courseCode: 'Code',
+    createCourse: 'Create Course',
+    searchCourses: 'Search courses...',
+    departmentFilter: 'Department',
+    avgClassSize: 'Avg Class Size',
+    activeStudents: 'Active Students',
+    viewCourseDetails: 'View Details',
 
     // Grades View
     assignment: 'Assignment',
@@ -267,6 +274,13 @@ export const translations = {
 
     // Courses View
     studentsLabel: 'Estudiantes',
+    courseCode: 'Código',
+    createCourse: 'Crear Curso',
+    searchCourses: 'Buscar cursos...',
+    departmentFilter: 'Departamento',
+    avgClassSize: 'Prom. Clase',
+    activeStudents: 'Estudiantes Activos',
+    viewCourseDetails: 'Ver Detalles',
 
     // Grades View
     assignment: 'Tarea',
