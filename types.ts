@@ -14,6 +14,7 @@ export interface User {
   phoneNumber?: string;
   address?: string;
   department?: string; // Generic field for department or class/grade reference
+  bio?: string;
 }
 
 export interface Student extends User {

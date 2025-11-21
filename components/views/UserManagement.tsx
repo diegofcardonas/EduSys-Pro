@@ -20,6 +20,7 @@ interface ExtendedUserFormData {
     gradeLevel?: number; // Student specific
     parentContact?: string; // Student specific
     avatarUrl?: string;
+    bio?: string;
 }
 
 interface UserManagementProps {
@@ -39,6 +40,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
 
     // State
     const [filterRole, setFilterRole] = useState<Role | 'All'>('All');
+    const [filterStatus, setFilterStatus] = useState<UserStatus | 'All'>('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -61,7 +63,8 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
         office: '',
         gradeLevel: 10,
         parentContact: '',
-        avatarUrl: ''
+        avatarUrl: '',
+        bio: ''
     };
     const [formData, setFormData] = useState<ExtendedUserFormData>(initialFormState);
 
@@ -118,8 +121,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
     // Filtering and Sorting
     const filteredUsers = users.filter(user => {
         const matchesRole = filterRole === 'All' || user.role === filterRole;
+        const matchesStatus = filterStatus === 'All' || user.status === filterStatus;
         const matchesSearch = user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
-        return matchesRole && matchesSearch;
+        return matchesRole && matchesStatus && matchesSearch;
     }).sort((a, b) => {
         // Simple sort by Join Date for now
         const dateA = new Date(a.joinDate).getTime();
@@ -191,7 +195,8 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
             office: u.office || '',
             gradeLevel: u.gradeLevel || 10,
             parentContact: u.parentContact || '',
-            avatarUrl: user.avatarUrl || ''
+            avatarUrl: user.avatarUrl || '',
+            bio: user.bio || ''
         });
         setErrors({});
         setIsModalOpen(true);
@@ -413,6 +418,18 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
                                 </div>
                             </div>
 
+                            {/* Bio Field */}
+                             <div style={styles.formGroup}>
+                                <label style={{...styles.label, color: colors.textSecondary}}>{t('bio')}</label>
+                                <textarea 
+                                    style={{...styles.textarea, backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.border}} 
+                                    value={formData.bio}
+                                    rows={3}
+                                    onChange={e => setFormData({...formData, bio: e.target.value})}
+                                    placeholder={t('bioPlaceholder')}
+                                />
+                            </div>
+
                             <div style={styles.modalActions}>
                                 <button type="button" style={{...styles.cancelBtn, borderColor: colors.border, color: colors.textSecondary, backgroundColor: colors.secondaryBg}} onClick={() => setIsModalOpen(false)}>
                                     {t('cancel')}
@@ -510,6 +527,16 @@ const UserManagement: React.FC<UserManagementProps> = ({ users, setUsers, autoOp
                         </button>
 
                         <div style={styles.filterGroup}>
+                             <select 
+                                style={{...styles.filterSelect, backgroundColor: colors.card, color: colors.textSecondary, borderColor: colors.border}}
+                                value={filterStatus}
+                                onChange={(e) => setFilterStatus(e.target.value as UserStatus | 'All')}
+                            >
+                                <option value="All">{t('all')} Status</option>
+                                <option value="Active">{t('active')}</option>
+                                <option value="Inactive">{t('inactive')}</option>
+                                <option value="Suspended">{t('suspended')}</option>
+                            </select>
                             {['All', 'Administrator', 'Professor', 'Student'].map(role => (
                                 <button 
                                     key={role}
@@ -727,6 +754,16 @@ const styles: { [key: string]: React.CSSProperties } = {
         width: '100%',
         boxSizing: 'border-box',
     },
+    textarea: {
+        padding: '0.75rem',
+        borderRadius: '8px',
+        border: '1px solid',
+        fontSize: '0.9rem',
+        width: '100%',
+        boxSizing: 'border-box',
+        fontFamily: 'inherit',
+        resize: 'vertical',
+    },
     errorText: {
         fontSize: '0.8rem',
         marginTop: '0.25rem',
@@ -925,6 +962,15 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontSize: '0.875rem',
         fontWeight: 500,
         transition: 'all 0.2s',
+    },
+    filterSelect: {
+        padding: '0.5rem 1rem',
+        border: '1px solid',
+        borderRadius: '6px',
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        cursor: 'pointer',
+        outline: 'none',
     },
     addBtn: {
         display: 'flex',

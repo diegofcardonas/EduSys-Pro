@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { Student } from '../../types';
 import { courses, grades, attendance, teachers, timetable } from '../../data/mockData';
@@ -28,7 +27,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
       phoneNumber: student.phoneNumber || '',
       address: student.address || '',
       avatarUrl: student.avatarUrl,
-      bio: 'Aspiring student with a passion for science and technology. Member of the debate club and science fair team.' // Mock Bio
+      bio: student.bio || ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -53,6 +52,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
       student.phoneNumber = formData.phoneNumber;
       student.address = formData.address;
       student.avatarUrl = formData.avatarUrl;
+      student.bio = formData.bio;
       
       addNotification(t('userUpdatedSuccess'), 'success');
   };
@@ -66,7 +66,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
           phoneNumber: student.phoneNumber || '',
           address: student.address || '',
           avatarUrl: student.avatarUrl,
-          bio: formData.bio // Keep bio as is for now since it's not in student type
+          bio: student.bio || ''
       });
       setIsEditing(false);
   };
@@ -146,7 +146,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
                     rows={4}
                   />
               ) : (
-                  <p style={styles.bioText}>{formData.bio}</p>
+                  <p style={styles.bioText}>{formData.bio || 'No bio provided.'}</p>
               )}
           </div>
 
