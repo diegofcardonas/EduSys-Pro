@@ -1,6 +1,8 @@
 
 
 
+
+
 import React, { useState, useEffect } from 'react';
 import { Student, Teacher, User } from './types';
 import { students as initialStudents, teachers as initialTeachers } from './data/mockData';
@@ -140,7 +142,7 @@ const AppContent = () => {
       case 'Grades':
         return <Grades currentUser={currentUser} users={allUsers} />;
       case 'Attendance':
-        return <Attendance currentUser={currentUser} />;
+        return <Attendance currentUser={currentUser} users={allUsers} />;
       case 'Timetable':
         return <Timetable currentUser={currentUser} />;
       case 'Communication':

@@ -122,6 +122,15 @@ export const translations = {
     absent: 'Absent',
     late: 'Late',
     excused: 'Excused',
+    markAllPresent: 'Mark All Present',
+    selectDate: 'Select Date',
+    selectCourse: 'Select Course',
+    attendanceStats: 'Daily Stats',
+    history: 'History',
+    takeAttendance: 'Take Attendance',
+    attendanceSaved: 'Attendance updated.',
+    noStudentsInCourse: 'No students enrolled in this course.',
+    selectCourseToView: 'Select a course to view/take attendance.',
 
     // Timetable View
     time: 'Time',
@@ -134,7 +143,6 @@ export const translations = {
     addClass: 'Add Class',
     editClass: 'Edit Class',
     deleteClass: 'Delete Class',
-    selectCourse: 'Select Course',
     dragToReschedule: 'Drag and drop classes to reschedule',
     startTime: 'Start Time',
     endTime: 'End Time',
@@ -401,6 +409,15 @@ export const translations = {
     absent: 'Ausente',
     late: 'Tarde',
     excused: 'Justificado',
+    markAllPresent: 'Marcar Todos Presentes',
+    selectDate: 'Seleccionar Fecha',
+    selectCourse: 'Seleccionar Curso',
+    attendanceStats: 'Estadísticas del Día',
+    history: 'Historial',
+    takeAttendance: 'Pasar Lista',
+    attendanceSaved: 'Asistencia actualizada.',
+    noStudentsInCourse: 'No hay estudiantes inscritos en este curso.',
+    selectCourseToView: 'Selecciona un curso para ver/tomar asistencia.',
 
     // Timetable View
     time: 'Hora',
@@ -413,7 +430,7 @@ export const translations = {
     addClass: 'Agregar Clase',
     editClass: 'Editar Clase',
     deleteClass: 'Eliminar Clase',
-    selectCourse: 'Seleccionar Curso',
+    // selectCourse: 'Seleccionar Curso', // Removed duplicate
     dragToReschedule: 'Arrastra y suelta para reagendar',
     startTime: 'Hora Inicio',
     endTime: 'Hora Fin',
