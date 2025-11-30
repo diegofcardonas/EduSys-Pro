@@ -1,41 +1,55 @@
+
 import React from 'react';
-import { students } from '../../data/mockData';
+import { User, Student } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface StudentsProps {
+    users: User[];
     onSelectStudent: (studentId: string) => void;
 }
 
-const Students: React.FC<StudentsProps> = ({ onSelectStudent }) => {
+const Students: React.FC<StudentsProps> = ({ users, onSelectStudent }) => {
     const { t } = useLanguage();
+    const { colors } = useTheme();
+
+    // Filter dynamic users list for Students
+    const studentsList = users.filter(u => u.role === 'Student') as Student[];
+
     return (
-        <div style={styles.container}>
+        <div style={{...styles.container, backgroundColor: colors.card}}>
             <div style={styles.tableWrapper}>
                 <table style={styles.table}>
                     <thead>
                         <tr>
-                            <th style={styles.th}>{t('studentId')}</th>
-                            <th style={styles.th}>{t('name')}</th>
-                            <th style={styles.th}>{t('email')}</th>
-                            <th style={styles.th}>{t('gradeLevel')}</th>
-                            <th style={styles.th}>{t('parentContact')}</th>
+                            <th style={{...styles.th, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>{t('studentId')}</th>
+                            <th style={{...styles.th, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>{t('name')}</th>
+                            <th style={{...styles.th, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>{t('email')}</th>
+                            <th style={{...styles.th, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>{t('gradeLevel')}</th>
+                            <th style={{...styles.th, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>{t('parentContact')}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {students.map(student => (
-                            <tr key={student.id} style={styles.tr}>
-                                <td style={styles.td}>{student.studentId}</td>
+                        {studentsList.length > 0 ? studentsList.map(student => (
+                            <tr key={student.id} style={{...styles.tr, borderBottomColor: colors.border}}>
+                                <td style={{...styles.td, color: colors.text}}>{student.studentId || '-'}</td>
                                 <td 
-                                    style={{...styles.td, ...styles.nameCell}}
+                                    style={{...styles.td, ...styles.nameCell, color: colors.primary}}
                                     onClick={() => onSelectStudent(student.id)}
                                 >
                                     {student.name}
                                 </td>
-                                <td style={styles.td}>{student.email}</td>
-                                <td style={styles.td}>{student.gradeLevel}</td>
-                                <td style={styles.td}>{student.parentContact}</td>
+                                <td style={{...styles.td, color: colors.textSecondary}}>{student.email}</td>
+                                <td style={{...styles.td, color: colors.text}}>{student.gradeLevel || '-'}</td>
+                                <td style={{...styles.td, color: colors.textSecondary}}>{student.parentContact || '-'}</td>
                             </tr>
-                        ))}
+                        )) : (
+                            <tr>
+                                <td colSpan={5} style={{padding: '2rem', textAlign: 'center', color: colors.textSecondary}}>
+                                    No students found.
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -45,7 +59,6 @@ const Students: React.FC<StudentsProps> = ({ onSelectStudent }) => {
 
 const styles: { [key: string]: React.CSSProperties } = {
     container: {
-        backgroundColor: '#FFFFFF',
         borderRadius: '8px',
         padding: '2rem',
         boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
@@ -59,23 +72,19 @@ const styles: { [key: string]: React.CSSProperties } = {
         minWidth: '600px',
     },
     th: {
-        borderBottom: '2px solid #E2E8F0',
         padding: '0.75rem 1rem',
         textAlign: 'left',
         fontSize: '0.875rem',
         fontWeight: 600,
-        color: '#475569',
         textTransform: 'uppercase',
     },
     tr: {
-        borderBottom: '1px solid #E2E8F0',
+        borderBottom: '1px solid',
     },
     td: {
         padding: '0.75rem 1rem',
-        color: '#334155',
     },
     nameCell: {
-        color: '#004AAD',
         fontWeight: 600,
         cursor: 'pointer',
     }

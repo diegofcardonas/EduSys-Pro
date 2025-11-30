@@ -1,5 +1,6 @@
 
 
+
 export const translations = {
   en: {
     // General
@@ -81,11 +82,21 @@ export const translations = {
     studentsLabel: 'Students',
     courseCode: 'Code',
     createCourse: 'Create Course',
+    editCourse: 'Edit Course',
+    deleteCourse: 'Delete Course',
     searchCourses: 'Search courses...',
     departmentFilter: 'Department',
     avgClassSize: 'Avg Class Size',
     activeStudents: 'Active Students',
     viewCourseDetails: 'View Details',
+    courseName: 'Course Name',
+    description: 'Description',
+    assignProfessor: 'Assign Professor',
+    selectProfessor: 'Select a Professor',
+    courseCreatedSuccess: 'Course created successfully.',
+    courseUpdatedSuccess: 'Course updated successfully.',
+    courseDeletedSuccess: 'Course deleted successfully.',
+    confirmDeleteCourse: 'Are you sure you want to delete the course {name}?',
 
     // Grades View
     assignment: 'Assignment',
@@ -107,6 +118,17 @@ export const translations = {
     thursday: 'Thursday',
     friday: 'Friday',
     room: 'Room',
+    addClass: 'Add Class',
+    editClass: 'Edit Class',
+    deleteClass: 'Delete Class',
+    selectCourse: 'Select Course',
+    dragToReschedule: 'Drag and drop classes to reschedule',
+    startTime: 'Start Time',
+    endTime: 'End Time',
+    dayOfWeek: 'Day of Week',
+    classUpdated: 'Class rescheduled successfully',
+    classAdded: 'Class added successfully',
+    classDeleted: 'Class deleted successfully',
 
     // Communication View
     from: 'From',
@@ -195,6 +217,25 @@ export const translations = {
     userCreatedSuccess: 'User created successfully.',
     userUpdatedSuccess: 'User updated successfully.',
     userDeletedSuccess: 'User deleted successfully.',
+    
+    // Settings
+    settings_general: 'General',
+    settings_appearance: 'Appearance',
+    settings_notifications: 'Notifications',
+    settings_security: 'Security',
+    theme: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    language: 'Language',
+    notifications_email: 'Email Notifications',
+    notifications_push: 'Push Notifications',
+    notifications_system: 'System Alerts',
+    password_current: 'Current Password',
+    password_new: 'New Password',
+    password_confirm: 'Confirm Password',
+    password_change: 'Change Password',
+    password_success: 'Password updated successfully.',
+    settings_saved: 'Settings saved.',
   },
   es: {
     // General
@@ -276,11 +317,21 @@ export const translations = {
     studentsLabel: 'Estudiantes',
     courseCode: 'Código',
     createCourse: 'Crear Curso',
+    editCourse: 'Editar Curso',
+    deleteCourse: 'Eliminar Curso',
     searchCourses: 'Buscar cursos...',
     departmentFilter: 'Departamento',
     avgClassSize: 'Prom. Clase',
     activeStudents: 'Estudiantes Activos',
     viewCourseDetails: 'Ver Detalles',
+    courseName: 'Nombre del Curso',
+    description: 'Descripción',
+    assignProfessor: 'Asignar Profesor',
+    selectProfessor: 'Seleccionar un Profesor',
+    courseCreatedSuccess: 'Curso creado exitosamente.',
+    courseUpdatedSuccess: 'Curso actualizado exitosamente.',
+    courseDeletedSuccess: 'Curso eliminado exitosamente.',
+    confirmDeleteCourse: '¿Estás seguro de que deseas eliminar el curso {name}?',
 
     // Grades View
     assignment: 'Tarea',
@@ -302,6 +353,17 @@ export const translations = {
     thursday: 'Jueves',
     friday: 'Viernes',
     room: 'Salón',
+    addClass: 'Agregar Clase',
+    editClass: 'Editar Clase',
+    deleteClass: 'Eliminar Clase',
+    selectCourse: 'Seleccionar Curso',
+    dragToReschedule: 'Arrastra y suelta para reagendar',
+    startTime: 'Hora Inicio',
+    endTime: 'Hora Fin',
+    dayOfWeek: 'Día',
+    classUpdated: 'Clase reagendada exitosamente',
+    classAdded: 'Clase agregada exitosamente',
+    classDeleted: 'Clase eliminada exitosamente',
 
     // Communication View
     from: 'De',
@@ -390,5 +452,24 @@ export const translations = {
     userCreatedSuccess: 'Usuario creado exitosamente.',
     userUpdatedSuccess: 'Usuario actualizado exitosamente.',
     userDeletedSuccess: 'Usuario eliminado exitosamente.',
+    
+    // Settings
+    settings_general: 'General',
+    settings_appearance: 'Apariencia',
+    settings_notifications: 'Notificaciones',
+    settings_security: 'Seguridad',
+    theme: 'Tema',
+    light: 'Claro',
+    dark: 'Oscuro',
+    language: 'Idioma',
+    notifications_email: 'Notificaciones por Correo',
+    notifications_push: 'Notificaciones Push',
+    notifications_system: 'Alertas del Sistema',
+    password_current: 'Contraseña Actual',
+    password_new: 'Nueva Contraseña',
+    password_confirm: 'Confirmar Contraseña',
+    password_change: 'Cambiar Contraseña',
+    password_success: 'Contraseña actualizada exitosamente.',
+    settings_saved: 'Configuración guardada.',
   }
 };

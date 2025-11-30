@@ -1,7 +1,8 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { Student, Teacher, User } from './types';
-import { students, teachers } from './data/mockData';
+import { students as initialStudents, teachers as initialTeachers } from './data/mockData';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/views/Dashboard';
@@ -14,6 +15,7 @@ import Timetable from './components/views/Timetable';
 import Communication from './components/views/Communication';
 import StudentProfile from './components/views/StudentProfile';
 import UserManagement from './components/views/UserManagement';
+import Settings from './components/views/Settings';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { NotificationProvider } from './contexts/NotificationContext';
@@ -26,12 +28,36 @@ const AppContent = () => {
   const { t } = useLanguage();
   
   // --- Centralized Data State ---
-  // We lift the users state here so Dashboard stats update when UserManagement changes data
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Initialize Data
+  // Initialize Data from LocalStorage or Mocks
   useEffect(() => {
-      const initialUsers: User[] = [...students, ...teachers];
+      const storedUsers = localStorage.getItem('edusys_users');
+      
+      if (storedUsers) {
+          try {
+              const parsedUsers = JSON.parse(storedUsers);
+              setAllUsers(parsedUsers);
+          } catch (e) {
+              console.error("Failed to parse users from local storage", e);
+              initializeWithMocks();
+          }
+      } else {
+          initializeWithMocks();
+      }
+      setIsDataLoaded(true);
+  }, []);
+
+  // Save to LocalStorage whenever allUsers changes
+  useEffect(() => {
+      if (isDataLoaded && allUsers.length > 0) {
+          localStorage.setItem('edusys_users', JSON.stringify(allUsers));
+      }
+  }, [allUsers, isDataLoaded]);
+
+  const initializeWithMocks = () => {
+      const initialUsers: User[] = [...initialStudents, ...initialTeachers];
       // Ensure Admin exists
       if (!initialUsers.find(u => u.role === 'Administrator')) {
           initialUsers.unshift({
@@ -41,11 +67,12 @@ const AppContent = () => {
               role: 'Administrator',
               status: 'Active',
               joinDate: '2020-01-01',
-              avatarUrl: 'https://ui-avatars.com/api/?name=System+Admin&background=0D8ABC&color=fff'
+              avatarUrl: 'https://ui-avatars.com/api/?name=System+Admin&background=0D8ABC&color=fff',
+              bio: 'Administrator account for managing the EduSys platform.'
           });
       }
       setAllUsers(initialUsers);
-  }, []);
+  };
 
   const currentUser = allUsers.find(u => u.id === LOGGED_IN_USER_ID);
 
@@ -75,11 +102,14 @@ const AppContent = () => {
           handleViewStudentProfile(currentUser.id);
       } else {
           // Admins and Professors view the User Management modal to edit their details
-          // Note: Professors normally don't see the 'UserManagement' link in sidebar, 
-          // but we route them there specifically to edit themselves.
           // timestamp forces the effect to run again even if we are already on this view/user
           handleSetView('UserManagement', { editUserId: currentUser.id, timestamp: Date.now() });
       }
+  };
+
+  // Helper to update a specific user (passed down to profile views)
+  const handleUpdateUser = (updatedUser: User) => {
+      setAllUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
   };
 
   const renderView = () => {
@@ -90,9 +120,9 @@ const AppContent = () => {
       case 'Dashboard':
         return <Dashboard currentUser={currentUser} allUsers={allUsers} setView={handleSetView} />;
       case 'Students':
-        return <Students onSelectStudent={handleViewStudentProfile} />;
+        return <Students users={allUsers} onSelectStudent={handleViewStudentProfile} />;
       case 'Teachers':
-        return <Teachers />;
+        return <Teachers users={allUsers} />;
       case 'UserManagement':
         return (
             <UserManagement 
@@ -104,7 +134,7 @@ const AppContent = () => {
             />
         );
       case 'Courses':
-        return <Courses />;
+        return <Courses users={allUsers} />;
       case 'Grades':
         return <Grades currentUser={currentUser} />;
       case 'Attendance':
@@ -113,10 +143,19 @@ const AppContent = () => {
         return <Timetable currentUser={currentUser} />;
       case 'Communication':
         return <Communication currentUser={currentUser} />;
+      case 'Settings':
+        return <Settings />;
       case 'StudentProfile': {
-        const student = students.find(s => s.id === selectedStudentId) || (currentUser.role === 'Student' ? currentUser as Student : undefined);
-        if (!student) return <div>{t('studentNotFound')}</div>;
-        return <StudentProfile student={student} />;
+        const student = allUsers.find(s => s.id === selectedStudentId) || (currentUser.role === 'Student' ? currentUser : undefined);
+        
+        if (!student || student.role !== 'Student') return <div>{t('studentNotFound')}</div>;
+        
+        return (
+            <StudentProfile 
+                student={student as Student} 
+                onUpdateStudent={(updatedStudent) => handleUpdateUser(updatedStudent)}
+            />
+        );
       }
       default:
         return <Dashboard currentUser={currentUser} allUsers={allUsers} setView={handleSetView} />;
@@ -130,18 +169,26 @@ const AppContent = () => {
     if (currentView === 'UserManagement') {
         return t('userManagement');
     }
+    if (currentView === 'Settings') {
+        return t('settings');
+    }
     return t(currentView.toLowerCase());
   }
+
+  if (!isDataLoaded) return null;
 
   if (allUsers.length > 0 && !currentUser) {
     return (
         <div style={{...styles.appContainer, backgroundColor: colors.background}}>
-            <p style={{color: colors.text, padding: '2rem'}}>{t('userNotFound')}</p>
+            <p style={{color: colors.text, padding: '2rem'}}>
+                {t('userNotFound')} <br/> 
+                <button onClick={() => { localStorage.clear(); window.location.reload(); }} style={{marginTop: '1rem', padding: '0.5rem 1rem'}}>
+                    Reset Data
+                </button>
+            </p>
         </div>
     );
   }
-
-  if (allUsers.length === 0) return null; // Initial loading
 
   return (
     <div style={{...styles.appContainer, backgroundColor: colors.background}}>
@@ -192,7 +239,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        minWidth: 0, // Prevents content from overflowing on small screens
+        minWidth: 0, 
     },
     viewContainer: {
         padding: '2rem',

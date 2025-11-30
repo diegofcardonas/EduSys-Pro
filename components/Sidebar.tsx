@@ -1,5 +1,6 @@
 
 
+
 import React, { useState } from 'react';
 import { Role } from '../types';
 import { 
@@ -144,8 +145,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, userRole, isSid
       {/* Footer Actions */}
       <div style={styles.footer}>
         <button 
-            style={{...styles.footerBtn, justifyContent: isCollapsed ? 'center' : 'flex-start'}} 
-            onClick={() => handleFooterAction('Settings')}
+            style={{
+                ...styles.footerBtn, 
+                justifyContent: isCollapsed ? 'center' : 'flex-start',
+                backgroundColor: currentView === 'Settings' ? 'rgba(255,255,255,0.15)' : 'transparent',
+                color: currentView === 'Settings' ? '#FFFFFF' : 'rgba(255,255,255,0.7)'
+            }} 
+            onClick={() => setView('Settings')}
             title={t('settings')}
         >
             <SettingsIcon />

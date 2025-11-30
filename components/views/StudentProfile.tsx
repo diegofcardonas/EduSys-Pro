@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Student } from '../../types';
 import { courses, grades, attendance, teachers, timetable } from '../../data/mockData';
@@ -8,11 +9,12 @@ import { useNotification } from '../../contexts/NotificationContext';
 
 interface StudentProfileProps {
   student: Student;
+  onUpdateStudent?: (updatedStudent: Student) => void;
 }
 
 type Tab = 'overview' | 'academic' | 'attendance' | 'schedule';
 
-const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
+const StudentProfile: React.FC<StudentProfileProps> = ({ student, onUpdateStudent }) => {
   const { t } = useLanguage();
   const { addNotification } = useNotification();
   const [activeTab, setActiveTab] = useState<Tab>('overview');
@@ -44,15 +46,22 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student }) => {
 
   const handleSave = () => {
       setIsEditing(false);
-      // Update local object (Mock persistence)
-      student.name = formData.name;
-      student.email = formData.email;
-      student.parentContact = formData.parentContact;
-      student.gradeLevel = Number(formData.gradeLevel);
-      student.phoneNumber = formData.phoneNumber;
-      student.address = formData.address;
-      student.avatarUrl = formData.avatarUrl;
-      student.bio = formData.bio;
+      
+      const updatedStudent: Student = {
+          ...student,
+          name: formData.name,
+          email: formData.email,
+          parentContact: formData.parentContact,
+          gradeLevel: Number(formData.gradeLevel),
+          phoneNumber: formData.phoneNumber,
+          address: formData.address,
+          avatarUrl: formData.avatarUrl,
+          bio: formData.bio
+      };
+
+      if (onUpdateStudent) {
+          onUpdateStudent(updatedStudent);
+      }
       
       addNotification(t('userUpdatedSuccess'), 'success');
   };
