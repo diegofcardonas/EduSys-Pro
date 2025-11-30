@@ -1,12 +1,14 @@
 
 
 
+
+
 import React, { useState } from 'react';
 import { Role } from '../types';
 import { 
     DashboardIcon, StudentsIcon, TeachersIcon, CoursesIcon, 
     GradesIcon, AttendanceIcon, TimetableIcon, CommunicationIcon, 
-    UsersIcon, ChevronRightDoubleIcon, ChevronLeftDoubleIcon, SettingsIcon, HelpIcon
+    UsersIcon, ChevronRightDoubleIcon, ChevronLeftDoubleIcon, SettingsIcon, HelpIcon, DollarIcon
 } from './Icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -60,6 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, userRole, isSid
           label: 'menu_admin',
           items: [
               { name: 'users', viewName: 'UserManagement', icon: UsersIcon, roles: ['Administrator'] },
+              { name: 'finance', viewName: 'Finance', icon: DollarIcon, roles: ['Administrator'] },
           ]
       },
       {

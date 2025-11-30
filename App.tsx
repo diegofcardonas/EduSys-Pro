@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect } from 'react';
 import { Student, Teacher, User } from './types';
 import { students as initialStudents, teachers as initialTeachers } from './data/mockData';
@@ -15,6 +16,7 @@ import Timetable from './components/views/Timetable';
 import Communication from './components/views/Communication';
 import StudentProfile from './components/views/StudentProfile';
 import UserManagement from './components/views/UserManagement';
+import Finance from './components/views/Finance';
 import Settings from './components/views/Settings';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -136,13 +138,15 @@ const AppContent = () => {
       case 'Courses':
         return <Courses users={allUsers} />;
       case 'Grades':
-        return <Grades currentUser={currentUser} />;
+        return <Grades currentUser={currentUser} users={allUsers} />;
       case 'Attendance':
         return <Attendance currentUser={currentUser} />;
       case 'Timetable':
         return <Timetable currentUser={currentUser} />;
       case 'Communication':
         return <Communication currentUser={currentUser} />;
+      case 'Finance':
+        return <Finance users={allUsers} />;
       case 'Settings':
         return <Settings />;
       case 'StudentProfile': {

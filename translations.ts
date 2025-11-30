@@ -1,6 +1,4 @@
 
-
-
 export const translations = {
   en: {
     // General
@@ -26,6 +24,7 @@ export const translations = {
     students: 'Students',
     teachers: 'Teachers',
     users: 'Users',
+    finance: 'Finance',
     
     // Sidebar Groups & Footer
     menu_main: 'Main',
@@ -61,7 +60,7 @@ export const translations = {
     nextClass: 'Next Class',
     myGrades: 'My Grades',
     attendanceOverview: 'Attendance Overview',
-    revenue: 'Revenue (YTD)',
+    revenue: 'Revenue',
     featureNotAvailable: 'Feature not available in demo.',
     financialReportGenerated: 'Financial report generated successfully.',
     systemReportGenerated: 'System diagnostic report generated.',
@@ -102,6 +101,20 @@ export const translations = {
     assignment: 'Assignment',
     date: 'Date',
     score: 'Score',
+    addGrade: 'Add Grade',
+    editGrade: 'Edit Grade',
+    deleteGrade: 'Delete Grade',
+    selectStudent: 'Select Student',
+    gradeCreatedSuccess: 'Grade added successfully.',
+    gradeUpdatedSuccess: 'Grade updated successfully.',
+    gradeDeletedSuccess: 'Grade deleted successfully.',
+    confirmDeleteGrade: 'Are you sure you want to delete this grade?',
+    highestScore: 'Highest Score',
+    lowestScore: 'Lowest Score',
+    courseAverage: 'Course Average',
+    noGradesFound: 'No grades found.',
+    average: 'Average',
+    totalAssignments: 'Assignments',
 
     // Attendance View
     status: 'Status',
@@ -236,6 +249,35 @@ export const translations = {
     password_change: 'Change Password',
     password_success: 'Password updated successfully.',
     settings_saved: 'Settings saved.',
+
+    // Finance
+    income: 'Income',
+    expenses: 'Expenses',
+    netBalance: 'Net Balance',
+    addTransaction: 'Add Transaction',
+    editTransaction: 'Edit Transaction',
+    deleteTransaction: 'Delete Transaction',
+    title: 'Title',
+    amount: 'Amount',
+    type: 'Type',
+    category: 'Category',
+    confirmDeleteTransaction: 'Are you sure you want to delete this transaction?',
+    transactionCreatedSuccess: 'Transaction created successfully.',
+    transactionUpdatedSuccess: 'Transaction updated successfully.',
+    transactionDeletedSuccess: 'Transaction deleted successfully.',
+    searchTransactions: 'Search transactions...',
+    linkedUser: 'Linked User',
+    selectUser: 'Select User',
+    noTransactionsFound: 'No transactions found.',
+    tuition: 'Tuition',
+    donation: 'Donation',
+    grant: 'Grant',
+    salary: 'Salary',
+    maintenance: 'Maintenance',
+    utilities: 'Utilities',
+    supplies: 'Supplies',
+    other: 'Other',
+    pendingPayments: 'Pending Payments',
   },
   es: {
     // General
@@ -261,6 +303,7 @@ export const translations = {
     students: 'Estudiantes',
     teachers: 'Profesores',
     users: 'Usuarios',
+    finance: 'Finanzas',
     
     // Sidebar Groups & Footer
     menu_main: 'Principal',
@@ -296,7 +339,7 @@ export const translations = {
     nextClass: 'Próxima Clase',
     myGrades: 'Mis Notas',
     attendanceOverview: 'Resumen Asistencia',
-    revenue: 'Ingresos (Año)',
+    revenue: 'Ingresos',
     featureNotAvailable: 'Esta función no está disponible en la demo.',
     financialReportGenerated: 'Reporte financiero generado exitosamente.',
     systemReportGenerated: 'Reporte de diagnóstico del sistema generado.',
@@ -337,6 +380,20 @@ export const translations = {
     assignment: 'Tarea',
     date: 'Fecha',
     score: 'Puntuación',
+    addGrade: 'Agregar Nota',
+    editGrade: 'Editar Nota',
+    deleteGrade: 'Eliminar Nota',
+    selectStudent: 'Seleccionar Estudiante',
+    gradeCreatedSuccess: 'Nota agregada exitosamente.',
+    gradeUpdatedSuccess: 'Nota actualizada exitosamente.',
+    gradeDeletedSuccess: 'Nota eliminada exitosamente.',
+    confirmDeleteGrade: '¿Estás seguro de que quieres eliminar esta nota?',
+    highestScore: 'Nota Más Alta',
+    lowestScore: 'Nota Más Baja',
+    courseAverage: 'Promedio Curso',
+    noGradesFound: 'No se encontraron notas.',
+    average: 'Promedio',
+    totalAssignments: 'Tareas',
     
     // Attendance View
     status: 'Estado',
@@ -471,5 +528,34 @@ export const translations = {
     password_change: 'Cambiar Contraseña',
     password_success: 'Contraseña actualizada exitosamente.',
     settings_saved: 'Configuración guardada.',
+
+    // Finance
+    income: 'Ingresos',
+    expenses: 'Gastos',
+    netBalance: 'Balance Neto',
+    addTransaction: 'Agregar Transacción',
+    editTransaction: 'Editar Transacción',
+    deleteTransaction: 'Eliminar Transacción',
+    title: 'Título',
+    amount: 'Monto',
+    type: 'Tipo',
+    category: 'Categoría',
+    confirmDeleteTransaction: '¿Estás seguro de que deseas eliminar esta transacción?',
+    transactionCreatedSuccess: 'Transacción creada exitosamente.',
+    transactionUpdatedSuccess: 'Transacción actualizada exitosamente.',
+    transactionDeletedSuccess: 'Transacción eliminada exitosamente.',
+    searchTransactions: 'Buscar transacciones...',
+    linkedUser: 'Usuario Vinculado',
+    selectUser: 'Seleccionar Usuario',
+    noTransactionsFound: 'No se encontraron transacciones.',
+    tuition: 'Matrícula',
+    donation: 'Donación',
+    grant: 'Subvención',
+    salary: 'Salario',
+    maintenance: 'Mantenimiento',
+    utilities: 'Servicios',
+    supplies: 'Suministros',
+    other: 'Otro',
+    pendingPayments: 'Pagos Pendientes',
   }
 };

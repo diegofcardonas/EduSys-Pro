@@ -1,6 +1,8 @@
 
 
 
+
+
 import React, { useState, useEffect } from 'react';
 import { courses as initialCourses } from '../../data/mockData';
 import { User, Teacher, Course } from '../../types';
@@ -233,7 +235,11 @@ const Courses: React.FC<CoursesProps> = ({ users }) => {
     const renderGridView = () => (
         <div style={styles.grid}>
             {filteredCourses.map(course => (
-                <div key={course.id} style={{...styles.card, backgroundColor: colors.card}}>
+                <div 
+                    key={course.id} 
+                    style={{...styles.card, backgroundColor: colors.card}}
+                    onClick={() => handleEditCourse(course)}
+                >
                     <div style={styles.cardHeader}>
                          <span style={{...styles.deptBadge, backgroundColor: colors.secondaryBg, color: colors.textSecondary}}>
                              {course.department}
@@ -282,7 +288,10 @@ const Courses: React.FC<CoursesProps> = ({ users }) => {
                                 <span style={{...styles.teacherName, color: colors.text}}>{course.teacherName}</span>
                             </div>
                         </div>
-                        <button style={{...styles.viewBtn, color: colors.primary, borderColor: colors.border}}>
+                        <button 
+                            style={{...styles.viewBtn, color: colors.primary, borderColor: colors.border}}
+                            onClick={(e) => { e.stopPropagation(); handleEditCourse(course); }}
+                        >
                             {t('viewCourseDetails')}
                         </button>
                     </div>
@@ -582,6 +591,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         display: 'flex',
         flexDirection: 'column',
         transition: 'transform 0.2s, box-shadow 0.2s',
+        cursor: 'pointer',
     },
     cardHeader: {
         padding: '1.5rem 1.5rem 0',

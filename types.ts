@@ -77,3 +77,19 @@ export interface CommunicationMessage {
   date: string;
   read: boolean;
 }
+
+// Finance Types
+export type TransactionType = 'Income' | 'Expense';
+export type TransactionStatus = 'Paid' | 'Pending' | 'Overdue';
+
+export interface Transaction {
+  id: string;
+  title: string;
+  amount: number;
+  type: TransactionType;
+  category: string;
+  date: string;
+  status: TransactionStatus;
+  relatedUserId?: string; // Optional link to a student (tuition) or teacher (salary)
+  description?: string;
+}
